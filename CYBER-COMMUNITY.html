@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Telah Pindah</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        
+        .notification {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #e74c3c;
+            margin-top: 0;
+        }
+        
+        .new-url {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-size: 18px;
+            word-break: break-all;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .icon {
+            font-size: 50px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        
+        .auto-redirect {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification">
+        <div class="icon">⚠️</div>
+        <h1>Website Telah Pindah</h1>
+        <p>Halaman yang Anda cari telah dipindahkan ke alamat baru. Silakan kunjungi alamat berikut:</p>
+        
+        <div class="new-url">
+            https://xbotz-ofc.github.io/Chat-Message-Hacker/
+        </div>
+        
+        <p>Anda akan otomatis diarahkan dalam <span id="countdown">10</span> detik.</p>
+        
+        <a href="https://xbotz-ofc.github.io/Chat-Message-Hacker/" class="btn">Kunjungi Sekarang</a>
+        
+        <p class="auto-redirect">Jika tidak otomatis diarahkan, silakan klik tombol di atas.</p>
+    </div>
+
+    <script>
+        // Countdown dan redirect otomatis
+        let seconds = 10;
+        const countdownElement = document.getElementById('countdown');
+        
+        const countdown = setInterval(function() {
+            seconds--;
+            countdownElement.textContent = seconds;
+            
+            if (seconds <= 0) {
+                clearInterval(countdown);
+                window.location.href = "https://xbotz-ofc.github.io/Chat-Message-Hacker/";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
