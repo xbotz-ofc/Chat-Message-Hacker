@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .content {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .content.show {
+            opacity: 1;
+        }
+        
+        .protection-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="protection-overlay hidden" id="overlay">
+        <h1 class="text-3xl font-bold mb-4">View Source Blocked</h1>
+        <p class="text-xl mb-6">This website prevents viewing page source</p>
+    </div>
+
+    <div class="content container mx-auto px-4 py-8" id="realContent">
+        <header class="mb-12">
+            <h1 class="text-4xl font-bold text-center text-indigo-700 mb-4">Website Terproteksi</h1>
+            <p class="text-center text-lg text-gray-600 max-w-2xl mx-auto">
+                Konten website ini dilindungi dan tidak dapat dilihat melalui view source.
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-semibold mb-3 text-indigo-600">Fitur Keamanan 1</h2>
+                <p class="text-gray-700">Proteksi terhadap klik kanan dan menu konteks.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-semibold mb-3 text-indigo-600">View Source Protection</h2>
+                <p class="text-gray-700">Blocks all attempts to view page source.</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-semibold mb-4 text-center text-indigo-600">Bagaimana Sistem Ini Bekerja?</h2>
+            <p class="text-gray-700 mb-4">
+                Sistem ini menggunakan beberapa teknik untuk mencegah pengguna melihat source code:
+            </p>
+            <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                <li>Menonaktifkan klik kanan dan menu konteks</li>
+                <li>Memantau pembukaan developer tools</li>
+                <li>Mengenkripsi sebagian konten</li>
+                <li>Memuat konten dinamis melalui JavaScript</li>
+                <li>Mendeteksi usaha debugging</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Enkripsi sederhana untuk konten
+        function decryptContent(encrypted) {
+            return encrypted.split('').map(c => 
+                String.fromCharCode(c.charCodeAt(0) - 1)
+            ).join('');
+        }
+
+        // Konten yang dienkripsi
+        const encryptedContent = decryptContent("Kpof!gpsnbspef!jt!vojwfsjbm/!Jg!zpv!dbo!sfbe!uijt-!zpv!bsf!cspxTJOH!uif!efwfmpqfs!uppmt!ps!efdpef/");
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tampilkan konten setelah dekripsi
+            const contentEl = document.getElementById('realContent');
+            setTimeout(() => {
+                contentEl.classList.add('show');
+            }, 500);
+
+            // Sembunyikan overlay
+            document.getElementById('closeOverlay').addEventListener('click', function() {
+                document.getElementById('overlay').style.display = 'none';
+            });
+
+            // Proteksi klik kanan
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                document.getElementById('overlay').style.display = 'flex';
+            });
+
+            // Block view source attempts
+            document.addEventListener('keydown', function(e) {
+                // Block Ctrl+U/F12/Ctrl+Shift+I
+                if ((e.ctrlKey && e.key === 'u') || 
+                    e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                    e.preventDefault();
+                    document.getElementById('overlay').classList.remove('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
