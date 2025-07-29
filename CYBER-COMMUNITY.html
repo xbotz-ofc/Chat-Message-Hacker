@@ -2,127 +2,189 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Chat Message Anonim</title>
+  <title>Cyber Community</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; font-family: monospace;
-      background: #000; color: #f00;
-      display: flex; flex-direction: column;
-      font-weight: bold; font-size: 18px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
     }
-    h1, h2, h3 { text-align: center; }
+    
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    h1, h2, h3 {
+      text-align: center;
+      color: #ff4444;
+      text-shadow: 0 0 5px #ff0000;
+      margin: 10px 0;
+    }
+    
     #login-container, #chat-container, #group-container {
       padding: 20px;
-      margin: auto;
+      margin: 10px auto;
       width: 100%;
       max-width: 500px;
+      background-color: #1e1e1e;
+      border: 1px solid #ff4444;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
     }
-    input, button, textarea {
+    
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background-color: #2a2a2a;
+      color: #e0e0e0;
+      font-weight: bold;
+    }
+    
+    button {
       width: 100%;
       padding: 12px;
       margin: 6px 0;
       border: none;
-      border-radius: 5px;
-      background: #111;
-      color: #f00;
+      border-radius: 4px;
+      background-color: #ff4444;
+      color: black;
       font-weight: bold;
-      font-size: 17px;
+      cursor: pointer;
+      transition: all 0.3s;
     }
-    button:hover { background: #222; cursor: pointer; }
-    #chat-container, #group-container { display: none; }
-
-    /* Bubble Message Styles */
+    
+    button:hover {
+      background-color: #ff0000;
+      color: white;
+      box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+    }
+    
+    #chat-container, #group-container { 
+      display: none; 
+    }
+    
+    /* Bubble Chat Styles */
     #messages {
-      background: #111;
       padding: 10px;
       height: 400px;
       overflow-y: auto;
-      border-radius: 5px;
       margin-bottom: 10px;
-    }
-    .msg { 
-      margin: 15px 0;
-      position: relative;
-      padding-left: 15px;
-    }
-    .msg::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: #f00;
-    }
-    .msg-content {
-      background: #222;
-      padding: 12px 15px;
+      display: flex;
+      flex-direction: column;
+      background-color: #1a1a1a;
+      border: 1px solid #333;
       border-radius: 5px;
-      display: inline-block;
-      max-width: 80%;
-      position: relative;
-      word-wrap: break-word;
-    }
-    .msg.you { 
-      text-align: right;
-      padding-right: 15px;
-      padding-left: 0;
-    }
-    .msg.you .msg-content {
-      background: #300;
-      color: #0f0;
-    }
-    .msg.you::before {
-      left: auto;
-      right: 0;
-      background: #0f0;
-    }
-    .msg.other { 
-      text-align: left;
     }
     
-    /* Media Styles */
-    .media-container {
-      margin-top: 5px;
-      max-width: 100%;
+    .message {
+      max-width: 80%;
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 18px;
+      position: relative;
+      word-wrap: break-word;
+      animation: fadeIn 0.3s ease-in-out;
     }
-    .media-container img {
-      max-width: 100%;
-      max-height: 200px;
-      border-radius: 5px;
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .media-container video {
-      max-width: 100%;
-      max-height: 200px;
-      background: #000;
-      border-radius: 5px;
+    
+    .message.you {
+      align-self: flex-end;
+      background-color: #2a2a2a;
+      border: 1px solid #00ff00;
+      border-bottom-right-radius: 0;
     }
-    .media-container audio {
+    
+    .message.other {
+      align-self: flex-start;
+      background-color: #2a2a2a;
+      border: 1px solid #0088ff;
+      border-bottom-left-radius: 0;
+    }
+    
+    .message-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+    
+    .message.you .message-info {
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .message.other .message-info {
+      color: #888;
+    }
+    
+    .message-sender {
+      font-weight: bold;
+    }
+    
+    .message-time {
+      margin-left: 10px;
+    }
+    
+    .message-type {
+      position: absolute;
+      top: -18px;
+      font-size: 11px;
+      color: #ff4444;
+      left: 0;
       width: 100%;
-      background: #111;
-      padding: 5px;
+      text-align: center;
+    }
+    
+    .message.you .message-type {
+      text-align: right;
+      right: 10px;
+      left: auto;
+    }
+    
+    .message-content {
+      color: #ffffff;
+    }
+    
+    .message.you .message-content {
+      color: #00ff00 !important;
+    }
+    
+    .message.other .message-content {
+      color: #0088ff !important;
+    }
+    
+    .message-content img, .message-content video {
+      max-width: 100%;
       border-radius: 5px;
-      outline: 1px solid #f00;
-    }
-    .media-file-info {
-      font-size: 14px;
       margin-top: 5px;
-      color: #f00;
+      border: 1px solid #444;
     }
-
-    /* Input Container */
+    
+    /* Input Area */
     #input-container {
       display: flex;
       flex-direction: column;
       gap: 5px;
       margin-top: 10px;
-      background: #000;
+      background-color: #1e1e1e;
       padding: 10px;
       border-radius: 5px;
+      border: 1px solid #333;
     }
     
     #input-row {
@@ -133,180 +195,187 @@
     #chat-input {
       flex: 1;
       padding: 12px;
+      background-color: #2a2a2a;
+      color: #e0e0e0;
     }
     
     #btn-send {
       width: auto;
       padding: 12px 20px;
-      background: #f00;
-      color: white;
+      background-color: #ff4444;
+      color: black;
     }
-
-    /* File Input */
-    #file-input-container {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    #file-input-label {
-      background: #111;
-      color: #f00;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    #file-input {
-      display: none;
-    }
-    #file-name {
-      font-size: 14px;
-      color: #f00;
-    }
-
-    /* User List Styles */
+    
+    /* User List */
     #user-list-container {
-      margin-bottom: 10px;
-      background: #111;
+      margin-top: 10px;
+      background-color: #1e1e1e;
       padding: 10px;
       border-radius: 5px;
+      border: 1px solid #333;
+      display: none;
     }
     
-    #user-list-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 5px;
-    }
-    
-    #user-list-toggle {
-      background: #333;
-      padding: 5px 10px;
-      font-size: 14px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    
-    #user-list-toggle:hover {
-      background: #444;
-    }
-    
-    #user-search-container, #group-search-container {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 5px;
-    }
-    
-    #user-search, #group-search {
-      flex: 1;
-      padding: 8px;
-      font-size: 14px;
-    }
-    
-    #btn-clear-search, #btn-clear-group-search {
-      width: auto;
-      padding: 8px 12px;
-      background: #333;
-      color: #f00;
-    }
-    
-    #user-list, #group-users, #group-list {
-      margin-top: 5px;
+    #user-list {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
     }
     
+    #group-list {
+      display: none;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    
     #user-list button, #group-users button, #group-list button {
       flex: 1;
       min-width: 100px;
-      background: #111;
-      color: #f00;
+      background-color: #2a2a2a;
+      color: #ff4444;
+      border: 1px solid #ff4444;
       padding: 8px;
       font-size: 14px;
     }
     
-    .online::after { content: " ●"; color: #0f0; }
-    .offline::after { content: " ●"; color: #444; }
-    .active-chat { background: #333 !important; }
-    .hidden { display: none !important; }
-
-    /* Group Request Box */
+    #user-list button:hover, #group-users button:hover, #group-list button:hover {
+      background-color: #ff4444;
+      color: black;
+    }
+    
+    .online::after { 
+      content: " ●"; 
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
+    }
+    
+    .offline::after { 
+      content: " ●"; 
+      color: #888; 
+    }
+    
+    .active-chat { 
+      background-color: #3a0000 !important;
+      border-color: #ff0000 !important;
+    }
+    
+    /* Group Requests */
     #group-requests-box {
       margin-top: 20px;
-      border: 1px solid #f00;
+      border: 1px solid #ff4444;
       padding: 10px;
       border-radius: 5px;
       display: none;
-    }
-
-    /* Group Controls */
-    #top-group-controls {
-      position: sticky;
-      top: 0;
-      background: #000;
-      z-index: 2;
-      padding-bottom: 10px;
+      background-color: #1e1e1e;
     }
     
-    /* Chat Controls */
-    #chat-controls {
-      display: flex;
-      justify-content: space-between;
+    /* Scrollbar */
+    #messages::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    #messages::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+    
+    #messages::-webkit-scrollbar-thumb {
+      background: #ff4444;
+      border-radius: 4px;
+    }
+    
+    #messages::-webkit-scrollbar-thumb:hover {
+      background: #ff0000;
+    }
+    
+    /* Current Chat Info */
+    #current-chat-info {
+      background-color: #2a0000;
+      padding: 10px;
       margin-bottom: 10px;
+      border-radius: 5px;
+      text-align: center;
+      border: 1px solid #ff4444;
+      color: #ff8888;
     }
     
-    #btn-delete-chat {
-      background: #f00;
-      color: white;
-      padding: 8px 12px;
-      font-size: 14px;
+    /* File Input */
+    #file-input {
+      margin-top: 5px;
+      background-color: #2a2a2a;
+      padding: 8px;
+      border-radius: 4px;
+      color: #e0e0e0;
+    }
+    
+    /* Search */
+    #search-user {
+      margin-bottom: 10px;
+      background-color: #2a2a2a;
+      color: #e0e0e0;
+      border: 1px solid #444;
+    }
+    
+    /* Toggle Buttons */
+    #toggle-user-list, #toggle-group-btn {
+      background-color: #2a0000;
+      color: #ff4444;
+      border: 1px solid #ff4444;
+    }
+    
+    #toggle-user-list:hover, #toggle-group-btn:hover {
+      background-color: #ff4444;
+      color: black;
+    }
+    
+    /* Login Message */
+    #login-msg {
+      text-align: center;
+      color: #ff4444;
+      margin-top: 10px;
+      text-shadow: 0 0 3px #ff0000;
+    }
+    
+    /* Glow Effect */
+    .glow {
+      animation: glow 1.5s infinite alternate;
+    }
+    
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #ff0000;
+      }
+      to {
+        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+      }
     }
   </style>
 </head>
 <body>
   <div id="login-container">
-    <h1>CYBER COMMUNITY</h1>
+    <h1 class="glow">Chat Anonim</h1>
     <input id="username" placeholder="Username">
     <input id="password" type="password" placeholder="Password">
     <button id="btn-register">Daftar</button>
     <button id="btn-login">Login</button>
-    <p id="login-msg" style="color:red;"></p>
+    <p id="login-msg"></p>
   </div>
 
   <div id="chat-container">
-    <h2>Cyber Community By Xrans</h2>
-    <button id="toggle-group-btn" onclick="toggleGroupChat()">Tampilkan Grup Chat</button>
-    <div id="current-chat-info">Sedang chat dengan: GLOBAL</div>
+    <h2 class="glow">CYBER COMMUNITY XRANS</h2>
+    <button id="toggle-user-list" onclick="toggleUserList()">Tampilkan Daftar Pengguna</button>
+    <button id="toggle-group-btn" onclick="toggleGroupChat()">Tampilkan Daftar Grup</button>
+    <div id="current-chat-info">Sedang chat dengan: SEMUA</div>
     
-    <!-- User List Container with Search and Toggle -->
     <div id="user-list-container">
-      <div id="user-list-header">
-        <h3 style="margin: 0;">Daftar Pengguna</h3>
-        <button id="user-list-toggle" onclick="toggleUserList()">▼ Sembunyikan</button>
+      <span style="color: #ff4444;">Daftar Pengguna</span>
+      <div class="search-container">
+        <input type="text" id="search-user" placeholder="Cari pengguna..." oninput="filterUsers()">
       </div>
-      
-      <div id="user-search-container">
-        <input id="user-search" type="text" placeholder="Cari pengguna..." oninput="filterUserList()">
-        <button id="btn-clear-search" onclick="clearUserSearch()">X</button>
-      </div>
-      
       <div id="user-list"></div>
     </div>
     
-    <!-- Group List with Search -->
-    <div id="group-list-container" style="display:none">
-      <div id="group-search-container">
-        <input id="group-search" type="text" placeholder="Cari grup..." oninput="filterGroupList()">
-        <button id="btn-clear-group-search" onclick="clearGroupSearch()">X</button>
-      </div>
-      <div id="group-list"></div>
-    </div>
-    
-    <div id="chat-controls">
-      <button id="btn-delete-chat" onclick="deleteCurrentChat()">Hapus Riwayat Chat Ini</button>
-    </div>
-    
+    <div id="group-list"></div>
     <div id="messages"></div>
     
     <div id="input-container">
@@ -314,12 +383,7 @@
         <input id="chat-input" type="text" placeholder="Ketik pesan di sini...">
         <button id="btn-send">Kirim</button>
       </div>
-      
-      <div id="file-input-container">
-        <label id="file-input-label" for="file-input">📁 Pilih File</label>
-        <span id="file-name"></span>
-        <input type="file" id="file-input" accept="image/*,video/*,audio/*">
-      </div>
+      <input type="file" id="file-input">
     </div>
     
     <button onclick="switchToGroup()">Kelola Grup</button>
@@ -352,15 +416,10 @@
     let currentUser = null;
     let chatWith = "ALL";
     let showGroupChat = false;
-    let showUserList = true;
+    let showUserList = false;
     let currentChatType = "public";
-    let chatHistory = {
-      public: [],
-      private: {},
-      group: {}
-    };
+    let allUsers = [];
 
-    // DOM Elements
     const loginBox = document.getElementById('login-container');
     const chatBox = document.getElementById('chat-container');
     const groupBox = document.getElementById('group-container');
@@ -371,88 +430,63 @@
     const userList = document.getElementById('user-list');
     const groupList = document.getElementById('group-list');
     const chatInput = document.getElementById('chat-input');
-    const fileInput = document.getElementById('file-input');
-    const fileName = document.getElementById('file-name');
     const groupReqBox = document.getElementById('group-requests-box');
     const groupUsers = document.getElementById('group-users');
     const toggleGroupBtn = document.getElementById('toggle-group-btn');
+    const toggleUserListBtn = document.getElementById('toggle-user-list');
     const currentChatInfo = document.getElementById('current-chat-info');
-    const userSearch = document.getElementById('user-search');
-    const groupSearch = document.getElementById('group-search');
-    const userListToggle = document.getElementById('user-list-toggle');
-    const userListContainer = document.getElementById('user-list-container').querySelector('#user-list');
-    const groupListContainer = document.getElementById('group-list-container');
+    const userListContainer = document.getElementById('user-list-container');
+    const searchUserInput = document.getElementById('search-user');
 
-    // Initialize the app
-    document.getElementById('btn-register').onclick = registerUser;
-    document.getElementById('btn-login').onclick = loginUser;
-    document.getElementById('btn-send').onclick = sendMessage;
-    fileInput.addEventListener('change', handleFileUpload);
-    chatInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') sendMessage();
-    });
-
-    function registerUser() {
+    document.getElementById('btn-register').onclick = () => {
       const u = userEl.value, p = passEl.value;
-      if (!u || !p) return showLoginMessage("Isi lengkap.", "error");
-      
+      if (!u || !p) return msgBox.textContent = "Isi lengkap.";
       db.ref("users/" + u).get().then(snap => {
-        if (snap.exists()) return showLoginMessage("Username sudah dipakai.", "error");
-        
-        db.ref("users/" + u).set({ 
-          password: p, 
-          online: true,
-          lastSeen: Date.now()
-        });
-        showLoginMessage("Berhasil daftar, login sekarang.", "success");
+        if (snap.exists()) return msgBox.textContent = "Username sudah dipakai.";
+        db.ref("users/" + u).set({ password: p, online: true });
+        msgBox.textContent = "Berhasil daftar, login sekarang.";
       });
-    }
+    };
 
-    function loginUser() {
+    document.getElementById('btn-login').onclick = () => {
       const u = userEl.value, p = passEl.value;
       db.ref("users/" + u).get().then(snap => {
         if (!snap.exists() || snap.val().password !== p) {
-          return showLoginMessage("Login gagal.", "error");
+          msgBox.textContent = "Login gagal.";
+        } else {
+          currentUser = u;
+          db.ref("users/" + u).update({ online: true });
+          loginBox.style.display = "none";
+          chatBox.style.display = "block";
+          initChat();
         }
-        
-        currentUser = u;
-        db.ref("users/" + u).update({ 
-          online: true,
-          lastSeen: Date.now()
-        });
-        
-        loginBox.style.display = "none";
-        chatBox.style.display = "block";
-        initChat();
-        loadChatHistory();
       });
-    }
+    };
 
     function initChat() {
-      // Load users
       db.ref("users").on("value", snap => {
         userList.innerHTML = '';
         groupUsers.innerHTML = '';
+        allUsers = [];
         
-        // Public chat button
         const publicBtn = document.createElement('button');
-        publicBtn.textContent = "GLOBAL";
+        publicBtn.textContent = "SEMUA";
         publicBtn.className = chatWith === "ALL" ? "active-chat" : "";
         publicBtn.onclick = () => {
           chatWith = "ALL";
           currentChatType = "public";
           updateChatInfo();
-          displayChatHistory();
+          msgArea.innerHTML = '';
+          loadMessages();
         };
         userList.appendChild(publicBtn);
         
-        // Other users
         snap.forEach(child => {
           const u = child.key;
           if (u === currentUser) return;
+          allUsers.push(u);
           const status = child.val().online ? 'online' : 'offline';
           
-          // Private chat button
           const btn = document.createElement('button');
           btn.textContent = u;
           btn.className = status + (chatWith === u ? " active-chat" : "");
@@ -460,11 +494,11 @@
             chatWith = u;
             currentChatType = "private";
             updateChatInfo();
-            displayChatHistory();
+            msgArea.innerHTML = '';
+            loadPrivateMessages(currentUser, u);
           };
           userList.appendChild(btn);
 
-          // Group invite button
           const inviteBtn = document.createElement('button');
           inviteBtn.textContent = `Undang ${u}`;
           inviteBtn.onclick = () => inviteToGroup(u);
@@ -472,7 +506,6 @@
         });
       });
 
-      // Load groups
       db.ref("groups").on("value", snap => {
         groupList.innerHTML = '';
         snap.forEach(child => {
@@ -485,207 +518,139 @@
               chatWith = "GROUP_"+groupName;
               currentChatType = "group";
               updateChatInfo();
-              displayChatHistory();
+              msgArea.innerHTML = '';
+              loadGroupMessages(groupName);
             };
             groupList.appendChild(btn);
           }
         });
       });
 
-      // Listen for new messages
-      db.ref("messages").on("child_added", s => {
-        const m = s.val();
-        saveMessageToHistory(m);
-        
-        if (shouldDisplayMessage(m)) {
-          displayMessage(m);
+      // Listen for new public messages
+      db.ref("public_messages").orderByChild("timestamp").on("child_added", s => {
+        if (currentChatType === "public") {
+          showMessage(s.val());
         }
       });
 
-      // Listen for group requests
+      // Listen for new private messages
+      db.ref("private_messages").orderByChild("timestamp").on("child_added", s => {
+        const msg = s.val();
+        if (currentChatType === "private" && 
+            ((msg.from === currentUser && msg.to === chatWith) || 
+             (msg.from === chatWith && msg.to === currentUser))) {
+          showMessage(msg);
+        }
+      });
+
+      // Listen for new group messages
+      db.ref("group_messages").on("child_added", s => {
+        if (currentChatType === "group" && s.key === chatWith.substring(6)) {
+          s.forEach(child => {
+            if (currentChatType === "group") {
+              showMessage(child.val());
+            }
+          });
+        }
+      });
+
       db.ref("group_requests/" + currentUser).on("child_added", s => {
         const groupName = s.key;
         const div = document.createElement('div');
-        div.innerHTML = `Undangan ke grup <b>${groupName}</b> 
+        div.innerHTML = `Undangan ke grup <b style="color:#ff4444">${groupName}</b> 
           <button onclick="acceptGroup('${groupName}')">Gabung</button>`;
         groupReqBox.appendChild(div);
       });
       
       updateChatInfo();
-    }
-
-    function handleFileUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
       
-      fileName.textContent = file.name;
+      chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
       
-      if (file.type.startsWith('audio/')) {
-        // Special handling for audio files
-        const audioURL = URL.createObjectURL(file);
-        const content = `
-          <div class="media-container">
-            <audio controls>
-              <source src="${audioURL}" type="${file.type}">
-              Browser tidak mendukung audio
-            </audio>
-            <div class="media-file-info">${file.name}</div>
-          </div>`;
-        
-        sendMediaMessage(content, 'audio');
-        fileName.textContent = '';
-        fileInput.value = '';
-      } 
-      else {
-        // Handle other file types (images, videos)
-        const reader = new FileReader();
-        reader.onload = () => {
-          let content = '';
-          let type = '';
-          
-          if (file.type.startsWith('image/')) {
-            content = `<div class="media-container"><img src="${reader.result}" style="max-width:100%;"></div>`;
-            type = 'image';
-          } else if (file.type.startsWith('video/')) {
-            content = `<div class="media-container"><video controls style="max-width:100%;"><source src="${reader.result}" type="${file.type}"></video></div>`;
-            type = 'video';
-          } else {
-            content = `<a href="${reader.result}" download="${file.name}">Unduh file: ${file.name}</a>`;
-            type = 'file';
-          }
-          
-          sendMediaMessage(content, type);
-          fileName.textContent = '';
-          fileInput.value = '';
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function sendMediaMessage(content, type) {
-      let recipient = chatWith;
-      if (currentChatType === "group") {
-        recipient = "GROUP_" + chatWith.substring(6);
-      }
-      
-      const newMessage = {
-        from: currentUser,
-        to: recipient,
-        text: content,
-        type: type,
-        ts: Date.now()
-      };
-      
-      db.ref("messages").push(newMessage);
-      saveMessageToHistory(newMessage);
-    }
-
-    function sendMessage() {
-      const text = chatInput.value.trim();
-      if (!text) return;
-      
-      let recipient = chatWith;
-      if (currentChatType === "group") {
-        recipient = "GROUP_" + chatWith.substring(6);
-      }
-      
-      const newMessage = {
-        from: currentUser, 
-        to: recipient, 
-        text: text,
-        ts: Date.now() 
-      };
-      
-      db.ref("messages").push(newMessage);
-      saveMessageToHistory(newMessage);
-      chatInput.value = '';
-      chatInput.focus();
-    }
-
-    function displayMessage({from, to, text, ts, type}) {
-      const d = new Date(ts);
-      const time = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-      
-      const div = document.createElement('div');
-      div.className = "msg " + (from === currentUser ? "you" : "other");
-      
-      const msgContent = document.createElement('div');
-      msgContent.className = 'msg-content';
-      
-      // Handle different message types
-      if (type === 'audio' || type === 'image' || type === 'video') {
-        msgContent.innerHTML = text;
-      } else {
-        msgContent.textContent = text;
-      }
-      
-      // Add sender info
-      const msgInfo = document.createElement('div');
-      msgInfo.className = 'msg-info';
-      msgInfo.innerHTML = `<b>${from}</b> @${time}`;
-      
-      div.appendChild(msgContent);
-      div.appendChild(msgInfo);
-      msgArea.appendChild(div);
-      msgArea.scrollTop = msgArea.scrollHeight;
-    }
-
-    function saveMessageToHistory(m) {
-      if (m.to === "ALL") {
-        chatHistory.public.push(m);
-      } else if (m.to.startsWith("GROUP_")) {
-        const groupName = m.to.substring(6);
-        if (!chatHistory.group[groupName]) chatHistory.group[groupName] = [];
-        chatHistory.group[groupName].push(m);
-      } else {
-        const otherUser = m.from === currentUser ? m.to : m.from;
-        if (!chatHistory.private[otherUser]) chatHistory.private[otherUser] = [];
-        chatHistory.private[otherUser].push(m);
-      }
-    }
-
-    function loadChatHistory() {
-      db.ref("messages").once("value").then(snap => {
-        chatHistory = { public: [], private: {}, group: {} };
-        snap.forEach(child => saveMessageToHistory(child.val()));
-        displayChatHistory();
+      document.querySelector('.search-container').addEventListener('click', function(e) {
+        if (e.target.tagName === 'DIV' || e.target.classList.contains('search-container')) {
+          searchUserInput.value = '';
+          filterUsers();
+        }
       });
     }
 
-    function displayChatHistory() {
+    function loadMessages() {
       msgArea.innerHTML = '';
-      
       if (currentChatType === "public") {
-        chatHistory.public.forEach(m => displayMessage(m));
-      } else if (currentChatType === "private") {
-        if (chatHistory.private[chatWith]) {
-          chatHistory.private[chatWith].forEach(m => displayMessage(m));
-        }
-      } else if (currentChatType === "group") {
-        const groupName = chatWith.substring(6);
-        if (chatHistory.group[groupName]) {
-          chatHistory.group[groupName].forEach(m => displayMessage(m));
+        loadPublicMessages();
+      }
+    }
+
+    function loadPublicMessages() {
+      db.ref("public_messages").orderByChild("timestamp").once("value", snap => {
+        snap.forEach(child => {
+          showMessage(child.val());
+        });
+      });
+    }
+
+    function loadPrivateMessages(user1, user2) {
+      const conversationId = [user1, user2].sort().join('_');
+      
+      db.ref("private_messages")
+        .orderByChild("conversationId")
+        .equalTo(conversationId)
+        .once("value", snap => {
+          snap.forEach(child => {
+            showMessage(child.val());
+          });
+        });
+    }
+
+    function loadGroupMessages(groupName) {
+      db.ref("group_messages/" + groupName).orderByChild("timestamp").once("value", snap => {
+        snap.forEach(child => {
+          showMessage(child.val());
+        });
+      });
+    }
+
+    function filterUsers() {
+      const searchTerm = searchUserInput.value.toLowerCase();
+      const userButtons = userList.getElementsByTagName('button');
+      
+      for (let i = 0; i < userButtons.length; i++) {
+        const username = userButtons[i].textContent.toLowerCase();
+        if (username.includes(searchTerm) || userButtons[i].textContent === "SEMUA") {
+          userButtons[i].style.display = "block";
+        } else {
+          userButtons[i].style.display = "none";
         }
       }
     }
 
-    function shouldDisplayMessage(m) {
-      if (currentChatType === "public" && m.to === "ALL") return true;
-      if (currentChatType === "private" && 
-          ((m.to === chatWith && m.from === currentUser) || 
-           (m.from === chatWith && m.to === currentUser))) return true;
-      if (currentChatType === "group" && m.to === chatWith) return true;
-      return false;
+    function toggleUserList() {
+      showUserList = !showUserList;
+      userListContainer.style.display = showUserList ? 'block' : 'none';
+      toggleUserListBtn.textContent = showUserList ? "✔️ Sembunyikan" : "✖️ Tampilkan";
+      if (showUserList) {
+        searchUserInput.value = '';
+        filterUsers();
+      }
+    }
+
+    function toggleGroupChat() {
+      showGroupChat = !showGroupChat;
+      groupList.style.display = showGroupChat ? "flex" : "none";
+      toggleGroupBtn.textContent = showGroupChat ? "Sembunyikan Daftar Grup" : "Tampilkan Daftar Grup";
     }
 
     function updateChatInfo() {
       let chatName = chatWith;
-      if (chatWith === "ALL") chatName = "GLOBAL";
+      if (chatWith === "ALL") chatName = "SEMUA";
       else if (chatWith.startsWith("GROUP_")) chatName = chatWith.substring(6);
       
       currentChatInfo.textContent = `Sedang chat dengan: ${chatName}`;
       
-      // Update active chat buttons
       document.querySelectorAll('#user-list button, #group-list button').forEach(btn => {
         btn.classList.remove('active-chat');
       });
@@ -695,91 +660,173 @@
       } else if (chatWith.startsWith("GROUP_")) {
         const groupName = chatWith.substring(6);
         document.querySelectorAll('#group-list button').forEach(btn => {
-          if (btn.textContent === groupName) btn.classList.add('active-chat');
+          if (btn.textContent === groupName) {
+            btn.classList.add('active-chat');
+          }
         });
       } else {
         document.querySelectorAll('#user-list button').forEach(btn => {
-          if (btn.textContent === chatWith) btn.classList.add('active-chat');
-        });
-      }
-    }
-
-    function toggleGroupChat() {
-      showGroupChat = !showGroupChat;
-      groupListContainer.style.display = showGroupChat ? "block" : "none";
-      toggleGroupBtn.textContent = showGroupChat ? "Sembunyikan Grup Chat" : "Tampilkan Grup Chat";
-    }
-
-    function toggleUserList() {
-      showUserList = !showUserList;
-      userListContainer.style.display = showUserList ? "flex" : "none";
-      userListToggle.textContent = showUserList ? "▼ Sembunyikan" : "▲ Tampilkan";
-    }
-
-    function filterUserList() {
-      const searchTerm = userSearch.value.toLowerCase();
-      const buttons = document.querySelectorAll('#user-list button');
-      
-      buttons.forEach(button => {
-        const text = button.textContent.toLowerCase();
-        if (text.includes(searchTerm) || searchTerm === '') {
-          button.classList.remove('hidden');
-        } else {
-          button.classList.add('hidden');
-        }
-      });
-    }
-
-    function filterGroupList() {
-      const searchTerm = groupSearch.value.toLowerCase();
-      const buttons = document.querySelectorAll('#group-list button');
-      
-      buttons.forEach(button => {
-        const text = button.textContent.toLowerCase();
-        if (text.includes(searchTerm) || searchTerm === '') {
-          button.classList.remove('hidden');
-        } else {
-          button.classList.add('hidden');
-        }
-      });
-    }
-
-    function clearUserSearch() {
-      userSearch.value = '';
-      filterUserList();
-    }
-
-    function clearGroupSearch() {
-      groupSearch.value = '';
-      filterGroupList();
-    }
-
-    function deleteCurrentChat() {
-      if (currentChatType === "public") {
-        chatHistory.public = [];
-      } else if (currentChatType === "private") {
-        if (chatHistory.private[chatWith]) delete chatHistory.private[chatWith];
-      } else if (currentChatType === "group") {
-        const groupName = chatWith.substring(6);
-        if (chatHistory.group[groupName]) delete chatHistory.group[groupName];
-      }
-      
-      // Delete from Firebase
-      db.ref("messages").once("value").then(snap => {
-        snap.forEach(child => {
-          const m = child.val();
-          if ((currentChatType === "public" && m.to === "ALL" && m.from === currentUser) ||
-              (currentChatType === "private" && 
-               ((m.to === chatWith && m.from === currentUser) || 
-                (m.from === chatWith && m.to === currentUser))) ||
-              (currentChatType === "group" && m.to === chatWith && m.from === currentUser)) {
-            db.ref("messages/" + child.key).remove();
+          if (btn.textContent === chatWith) {
+            btn.classList.add('active-chat');
           }
         });
-      });
+      }
+    }
+
+    document.getElementById('btn-send').onclick = sendMessage;
+
+    function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
       
-      displayChatHistory();
-      alert("Riwayat chat telah dihapus");
+      const timestamp = Date.now();
+      
+      if (currentChatType === "public") {
+        const messageData = { 
+          from: currentUser,
+          text: text,
+          type: "public",
+          timestamp: timestamp
+        };
+        
+        db.ref("public_messages").push(messageData)
+          .then(() => {
+            chatInput.value = '';
+            chatInput.focus();
+          });
+      }
+      else if (currentChatType === "private") {
+        const conversationId = [currentUser, chatWith].sort().join('_');
+        
+        const messageData = { 
+          from: currentUser,
+          to: chatWith,
+          text: text,
+          type: "private",
+          timestamp: timestamp,
+          conversationId: conversationId
+        };
+        
+        db.ref("private_messages").push(messageData)
+          .then(() => {
+            chatInput.value = '';
+            chatInput.focus();
+          });
+      }
+      else if (currentChatType === "group") {
+        const groupName = chatWith.substring(6);
+        const messageData = { 
+          from: currentUser,
+          text: text,
+          type: "group",
+          groupName: groupName,
+          timestamp: timestamp
+        };
+        
+        db.ref("group_messages/" + groupName).push(messageData)
+          .then(() => {
+            chatInput.value = '';
+            chatInput.focus();
+          });
+      }
+    }
+
+    document.getElementById('file-input').onchange = e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        let content = file.type.startsWith('image') ? `<img src="${reader.result}" width="150">`
+                  : file.type.startsWith('video') ? `<video controls width="150"><source src="${reader.result}"></video>`
+                  : '';
+        
+        const timestamp = Date.now();
+        
+        if (currentChatType === "public") {
+          const messageData = { 
+            from: currentUser,
+            text: content,
+            type: "public",
+            timestamp: timestamp
+          };
+          db.ref("public_messages").push(messageData);
+        }
+        else if (currentChatType === "private") {
+          const conversationId = [currentUser, chatWith].sort().join('_');
+          const messageData = { 
+            from: currentUser,
+            to: chatWith,
+            text: content,
+            type: "private",
+            timestamp: timestamp,
+            conversationId: conversationId
+          };
+          db.ref("private_messages").push(messageData);
+        }
+        else if (currentChatType === "group") {
+          const groupName = chatWith.substring(6);
+          const messageData = { 
+            from: currentUser,
+            text: content,
+            type: "group",
+            groupName: groupName,
+            timestamp: timestamp
+          };
+          db.ref("group_messages/" + groupName).push(messageData);
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+
+    function showMessage({from, type, text, timestamp}) {
+      const d = new Date(timestamp);
+      const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${from === currentUser ? "you" : "other"}`;
+      
+      const typeSpan = document.createElement('span');
+      typeSpan.className = 'message-type';
+      if (type === "public") typeSpan.textContent = "PUBLIK";
+      else if (type === "group") typeSpan.textContent = "GRUP";
+      else if (type === "private") typeSpan.textContent = "PRIVAT";
+      typeSpan.style.color = "#ff4444";
+      
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'message-info';
+      
+      const senderSpan = document.createElement('span');
+      senderSpan.className = 'message-sender';
+      senderSpan.textContent = from;
+      if (from === currentUser) {
+        senderSpan.style.color = "#00ff00";
+      } else {
+        senderSpan.style.color = "#0088ff";
+      }
+      
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'message-time';
+      timeSpan.textContent = time;
+      
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'message-content';
+      contentDiv.innerHTML = text;
+      
+      infoDiv.appendChild(senderSpan);
+      infoDiv.appendChild(timeSpan);
+      
+      messageDiv.appendChild(typeSpan);
+      messageDiv.appendChild(infoDiv);
+      messageDiv.appendChild(contentDiv);
+      
+      msgArea.appendChild(messageDiv);
+      msgArea.scrollTop = msgArea.scrollHeight;
+    }
+
+    function acceptGroup(group) {
+      db.ref("groups/" + group + "/members/" + currentUser).set(true);
+      db.ref("group_requests/" + currentUser + "/" + group).remove();
+      alert("Bergabung ke grup " + group);
     }
 
     function inviteToGroup(user) {
@@ -789,11 +836,15 @@
       alert("Undangan dikirim.");
     }
 
-    function acceptGroup(group) {
-      db.ref("groups/" + group + "/members/" + currentUser).set(true);
-      db.ref("group_requests/" + currentUser + "/" + group).remove();
-      alert("Bergabung ke grup " + group);
-    }
+    document.getElementById('btn-create-group').onclick = () => {
+      const name = document.getElementById('group-name').value;
+      if (!name) return;
+      db.ref("groups/" + name).set({ 
+        admin: currentUser, 
+        members: { [currentUser]: true } 
+      });
+      alert("Grup dibuat.");
+    };
 
     function switchToGroup() {
       chatBox.style.display = "none";
@@ -809,17 +860,9 @@
       groupReqBox.style.display = groupReqBox.style.display === 'none' ? 'block' : 'none';
     }
 
-    function showLoginMessage(msg, type) {
-      msgBox.textContent = msg;
-      msgBox.style.color = type === "error" ? "red" : "#0f0";
-    }
-
     window.addEventListener('beforeunload', () => {
       if (currentUser) {
-        db.ref("users/" + currentUser).update({ 
-          online: false,
-          lastSeen: Date.now()
-        });
+        db.ref("users/" + currentUser).update({ online: false });
       }
     });
   </script>
